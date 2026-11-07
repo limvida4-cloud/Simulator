@@ -6,7 +6,7 @@
 .viewer{position:relative;height:min(68vh,750px);min-height:400px;border-radius:7px;overflow:hidden;background:#282f37}.single-view,.comparison{position:absolute;inset:0}.comparison{display:none;grid-template-columns:1fr 1fr;gap:3px;background:#101820}.viewer.comparing .single-view{display:none}.viewer.comparing .comparison{display:grid}.visual{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate;background:#202e38}.photo{position:absolute;inset:0;background-size:cover;background-position:center center;transform:scale(1.015);transition:filter .3s,background-image .3s}.warm-haze{position:absolute;inset:0;background:#ba8c4a;mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity .25s}.veil{position:absolute;inset:0;background:linear-gradient(#fff7de75,#ebc68d44);pointer-events:none;opacity:0;transition:opacity .25s}.halos{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 20%,#ffe3a777,transparent 13%),radial-gradient(circle at 46% 18%,#ffeab588,transparent 9%),radial-gradient(circle at 75% 26%,#fff4bb77,transparent 13%);filter:blur(10px);opacity:0}.overlay-label{position:absolute;left:32px;top:22px;z-index:5;font-size:clamp(19px,1.5vw,27px);font-weight:600;text-shadow:0 2px 10px #0006}.info{display:inline-grid;place-items:center;margin-left:12px;border:2px solid white;border-radius:50%;width:23px;height:23px;line-height:1;font-size:14px;font-family:serif;cursor:help;vertical-align:3px}.half-label{position:absolute;bottom:20px;left:22px;z-index:5;background:#111c26cc;padding:9px 13px;border-radius:5px;font-weight:600;font-size:14px}.hidden{display:none!important}
 .reading{position:absolute;inset:0;background:linear-gradient(130deg,#827059,#bd9c7a);display:grid;place-items:center}.paper{background:#fffaf1;color:#2a3638;width:min(76%,700px);height:75%;padding:7% 6%;box-shadow:0 20px 50px #0004;transform:rotate(-2deg)}.paper h2{font:clamp(25px,3vw,50px) Georgia,serif;margin:0 0 25px}.paper p{font:clamp(14px,1.8vw,28px)/1.65 Georgia,serif;color:#37434a}.scene-description{font-size:11px;color:#9ba8b1;padding:15px 5px}.mobile-note{display:none}
 @media(max-width:1000px){.controls{gap:15px;grid-template-columns:repeat(3,minmax(0,1fr));padding-bottom:25px}.toggle-cell{grid-column:1}.control label{font-size:17px}select{font-size:17px}.viewer{height:58vh}}@media(max-width:650px){.controls{grid-template-columns:1fr 1fr;gap:18px 16px}.control:nth-child(3){grid-column:1}.toggle-cell{grid-column:2;grid-row:2}.control:nth-child(5){grid-column:1/-1}select{font-size:16px}.viewer{height:56vh;min-height:340px}.viewer.comparing .comparison{grid-template-columns:1fr;grid-template-rows:1fr 1fr}.overlay-label{left:17px;top:15px;font-size:18px}.half-label{font-size:11px;bottom:11px;left:11px}.app{padding:0 7px}.paper{width:90%;height:78%}}
-.play-pause{position:absolute;z-index:20;left:24px;bottom:20px;background:white;color:#0e615d;border:none;border-radius:40px;padding:14px 24px;font-size:16px;font-weight:750;cursor:pointer;box-shadow:0 3px 18px #0003}.ghosting{position:absolute;inset:0;pointer-events:none;transform:translate(3px,1px)}.video-error{position:absolute;inset:0;background:#10202c;color:#e3edf0;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;font-size:16px}.viewer.comparing .play-pause{bottom:18px;left:50%;transform:translateX(-50%)}@media(max-width:650px){.play-pause{left:12px;bottom:12px;padding:10px 16px;font-size:13px}}</style></head><body><main class="app">
+.play-pause{position:absolute;z-index:20;left:24px;bottom:20px;background:white;color:#0e615d;border:none;border-radius:40px;padding:14px 24px;font-size:16px;font-weight:750;cursor:pointer;box-shadow:0 3px 18px #0003}.ghosting{position:absolute;inset:0;pointer-events:none;transform:translate(3px,1px)}.video-error{position:absolute;inset:0;background:#10202c;color:#e3edf0;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;font-size:16px}.viewer.comparing .play-pause{bottom:18px;left:50%;transform:translateX(-50%)}@media(max-width:650px){.play-pause{left:12px;bottom:12px;padding:10px 16px;font-size:13px}}.clip-toolbar{display:flex;align-items:center;gap:16px;padding:16px 6px 5px;color:#a5bac6;font:13px system-ui;flex-wrap:wrap}.clip-button{cursor:pointer;background:#f4faf9;color:#105e61;border-radius:28px;padding:11px 18px;font-size:13px;font-weight:700}.clip-button:hover{background:#dcebe8}.video-error{background:#142631!important}.clip-toolbar #clipStatus{flex:1}@media(max-width:650px){.clip-toolbar{align-items:flex-start}.clip-button{white-space:nowrap}}</style></head><body><main class="app">
 <div class="controls">
 <div class="control"><label for="scene">Scene</label><div class="select-shell"><select id="scene">
 <option value="night" selected>Night Driving</option>
@@ -20,7 +20,7 @@
 <div class="control"><label for="other">Comparison Lens (IOL)</label><div class="select-shell disabled" id="otherShell"><select id="other" disabled><option value="none" selected>Select Lens</option><option value="mono">Monofocal</option><option value="edof">Extended Depth of Focus</option><option value="multi">Multifocal</option><option value="toric">Toric</option></select></div></div>
 </div>
 <section class="viewer" id="viewer"><div class="single-view" id="single"></div><div class="comparison" id="comparison"></div><button id="playPause" class="play-pause" type="button">&#10074;&#10074;&nbsp; Pause</button></section>
-<div class="scene-description">Illustrative visual simulation only. Not a clinically validated representation of vision, IOL performance, or a prediction of surgical outcomes.</div>
+<div class="clip-toolbar"><label for="clipInput" class="clip-button">Upload video for this scene</label><input id="clipInput" type="file" accept="video/mp4,video/webm,video/quicktime,video/*" style="display:none"><span id="clipStatus">Choose a video to replace missing stock footage. It stays in this browser.</span></div><div class="scene-description">Illustrative visual simulation only. Not a clinically validated representation of vision, IOL performance, or a prediction of surgical outcomes.</div>
 </main>
 <script>
 const scenes={
@@ -30,7 +30,32 @@ const scenes={
  reading:{title:"Reading",video:"https://assets.mixkit.co/videos/preview/mixkit-a-person-reading-a-book-close-up-1724-large.mp4",rate:1},
  nature:{title:"Outdoors",video:"https://assets.mixkit.co/videos/preview/mixkit-woman-walks-through-a-garden-971-large.mp4",rate:1}
 };
-const $=id=>document.getElementById(id);let videoOffset=0;const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
+const $=id=>document.getElementById(id);
+const sceneClips={};
+const clipDB=new Promise((resolve,reject)=>{
+ const req=indexedDB.open("vision-simulator-clips",1);
+ req.onupgradeneeded=()=>req.result.createObjectStore("clips");
+ req.onsuccess=()=>resolve(req.result);
+ req.onerror=()=>reject(req.error);
+});
+async function loadClip(scene){
+ try{
+  const db=await clipDB;
+  const saved=await new Promise((resolve,reject)=>{const r=db.transaction("clips","readonly").objectStore("clips").get(scene);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
+  if(saved instanceof Blob){sceneClips[scene]=URL.createObjectURL(saved);return true}
+ }catch(e){console.warn("Local video storage unavailable",e)}
+ return false;
+}
+async function saveClip(scene,file){
+ if(sceneClips[scene])URL.revokeObjectURL(sceneClips[scene]);
+ sceneClips[scene]=URL.createObjectURL(file);
+ try{
+  const db=await clipDB;
+  await new Promise((resolve,reject)=>{const t=db.transaction("clips","readwrite");t.objectStore("clips").put(file,scene);t.oncomplete=resolve;t.onerror=()=>reject(t.error)});
+ }catch(e){console.warn("Clip will play this session only",e)}
+ update();
+}
+let videoOffset=0;const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
 function renderVisual(lens,compareLabel){
  const scene=$("scene").value,condition=$("condition").value;
  const cataract=condition==="cataracts"||condition==="cataracts_astigmatism";
@@ -51,7 +76,7 @@ function renderVisual(lens,compareLabel){
  const video=document.createElement("video");
  video.className="scene-video";video.muted=true;video.autoplay=true;video.loop=true;
  video.playsInline=true;video.preload="metadata";
- video.src=scenes[scene].video;
+ video.src=sceneClips[scene]||scenes[scene].video;
  video.playbackRate=scenes[scene].rate;
  video.style.cssText="width:100%;height:100%;object-fit:cover;display:block";
  video.addEventListener("loadedmetadata",()=>{
@@ -62,7 +87,7 @@ function renderVisual(lens,compareLabel){
  video.addEventListener("error",()=>{
   const msg=document.createElement("div");
   msg.className="video-error";
-  msg.textContent="This scene's footage could not load. Please try another scene.";
+  msg.textContent="Video unavailable. Choose a local MP4 below to use footage in this scene.";
   photo.appendChild(msg);video.remove();
  },{once:true});
  photo.appendChild(video);el.appendChild(photo);
@@ -127,5 +152,18 @@ document.addEventListener("visibilitychange",()=>{
  if(document.hidden){document.querySelectorAll("video.scene-video").forEach(v=>v.pause());}
  else if(isPlaying){document.querySelectorAll("video.scene-video").forEach(v=>v.play().catch(()=>{}));}
 });
-update();
+
+$("clipInput").addEventListener("change",async e=>{
+ const file=e.target.files&&e.target.files[0];
+ if(!file)return;
+ if(!file.type.startsWith("video/")&&!/\.(mp4|webm|mov)$/i.test(file.name)){alert("Please choose a video file.");return}
+ $("clipStatus").textContent="Saving "+file.name+" for "+scenes[$("scene").value].title+"…";
+ await saveClip($("scene").value,file);
+ $("clipStatus").textContent=file.name+" saved in this browser for "+scenes[$("scene").value].title;
+ e.target.value="";
+});
+$("scene").addEventListener("change",()=>{
+ $("clipStatus").textContent=sceneClips[$("scene").value]?"Personal video loaded for this scene.":"Choose a local video for this scene if the stock clip is unavailable.";
+});
+(async()=>{for(const scene of Object.keys(scenes))await loadClip(scene);update()})();
 </script></body></html>
