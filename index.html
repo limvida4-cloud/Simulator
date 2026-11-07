@@ -9,7 +9,7 @@
 </style></head><body><main class="app">
 <div class="controls">
 <div class="control"><label for="scene">Scene</label><div class="select-shell"><select id="scene"><option value="night" selected>Night Driving</option><option value="day">Daytime Driving</option><option value="reading">Reading</option><option value="nature">Outdoors</option></select></div></div>
-<div class="control"><label for="condition">Eye Condition</label><div class="select-shell"><select id="condition"><option value="cataracts" selected>Cataracts</option><option value="healthy">Healthy Vision</option><option value="astigmatism">Astigmatism</option><option value="presbyopia">Presbyopia</option></select></div></div>
+<div class="control"><label for="condition">Eye Condition</label><div class="select-shell"><select id="condition"><option value="cataracts" selected>Cataracts</option><option value="cataracts_astigmatism">Cataracts + Astigmatism</option><option value="presbyopia">Presbyopia</option><option value="presbyopia_astigmatism">Presbyopia + Astigmatism</option></select></div></div>
 <div class="control"><label for="lens">Lens (IOL)</label><div class="select-shell"><select id="lens"><option value="none" selected>Select Lens</option><option value="mono">Monofocal</option><option value="edof">Extended Depth of Focus</option><option value="multi">Multifocal</option><option value="toric">Toric</option></select></div></div>
 <div class="control toggle-cell"><label for="compare">Compare</label><div class="toggle-shell"><input type="checkbox" id="compare" class="switch" aria-label="Compare lens profiles"></div></div>
 <div class="control"><label for="other">Comparison Lens (IOL)</label><div class="select-shell disabled" id="otherShell"><select id="other" disabled><option value="none" selected>Select Lens</option><option value="mono">Monofocal</option><option value="edof">Extended Depth of Focus</option><option value="multi">Multifocal</option><option value="toric">Toric</option></select></div></div>
@@ -19,17 +19,33 @@
 </main>
 <script>
 const scenes={night:{url:"https://images.pexels.com/photos/4839255/pexels-photo-4839255.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Night Driving"},day:{url:"https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Daytime Driving"},nature:{url:"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Outdoors"}};
-const $=id=>document.getElementById(id);const names={cataracts:"Cataracts",healthy:"Healthy Vision",astigmatism:"Astigmatism",presbyopia:"Presbyopia"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
+const $=id=>document.getElementById(id);const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
 function renderVisual(lens,compareLabel){let scene=$("scene").value,condition=$("condition").value;let el=document.createElement("div");el.className="visual";let photo=document.createElement("div");photo.className="photo";if(scene==="reading"){photo.innerHTML='<div class="reading"><div class="paper"><h2>A clearer view</h2><p>Our eyes help us explore the world around us. Different distances require different amounts of focus.</p><p>Vision may change over time.</p></div></div>'}else{photo.style.backgroundImage="url('"+scenes[scene].url+"')"}
-let blur=condition==="cataracts"?2.7:condition==="astigmatism"?1.9:condition==="presbyopia"&&scene==="reading"?3.4:0;let contrast=condition==="cataracts"?.72:1;let saturation=condition==="cataracts"?.83:1;
-if(lens==="mono"){blur*=scene==="reading"?.7:.28;contrast=Math.min(1,contrast+.13)}
-if(lens==="edof"){blur*=.25;contrast=Math.min(1,contrast+.18)}
-if(lens==="multi"){blur*=.32;contrast=Math.min(1,contrast+.12)}
-if(lens==="toric"&&condition==="astigmatism"){blur=.25;contrast=1}
+// The effects combine the selected condition's visual components.
+// These are explanatory illustrations; they do not model real patient outcomes.
+const cataract=condition==="cataracts"||condition==="cataracts_astigmatism";
+const astigmatism=condition==="cataracts_astigmatism"||condition==="presbyopia_astigmatism";
+const presbyopia=condition==="presbyopia"||condition==="presbyopia_astigmatism";
+const near=scene==="reading";
+let blur=(cataract?2.7:0)+(astigmatism?1.4:0)+(presbyopia&&near?3.7:0);
+let contrast=cataract?.68:1;
+let saturation=cataract?.8:1;
+if(lens==="mono"){blur*=near?.8:.45;contrast=Math.min(1,contrast+.12)}
+if(lens==="edof"){blur*=near?.48:.33;contrast=Math.min(1,contrast+.17)}
+if(lens==="multi"){blur*=.36;contrast=Math.min(1,contrast+.13)}
+if(lens==="toric"&&astigmatism){blur=Math.max(.15,blur-1.35);contrast=Math.min(1,contrast+.06)}
 photo.style.filter="blur("+blur+"px) contrast("+contrast+") saturate("+saturation+")";el.appendChild(photo);
-let warm=document.createElement("div");warm.className="warm-haze";warm.style.opacity=condition==="cataracts"?(lens==="none"?.48:.2):0;el.appendChild(warm);
-let veil=document.createElement("div");veil.className="veil";veil.style.opacity=condition==="cataracts"?(lens==="none"?.43:.15):0;el.appendChild(veil);
-let halo=document.createElement("div");halo.className="halos";halo.style.opacity=lens==="multi"?.65:condition==="cataracts"?.2:0;el.appendChild(halo);
+if(astigmatism){ // subtle offset image mimics directional ghosting
+  const ghost=photo.cloneNode(true);
+  ghost.style.opacity=lens==="toric"?.04:.16;
+  ghost.style.transform="translate(6px,2px) scale(1.012)";
+  ghost.style.filter="blur("+Math.max(blur-0.2,0)+"px) contrast("+contrast+")";
+  ghost.setAttribute("aria-hidden","true");
+  el.appendChild(ghost);
+}
+let warm=document.createElement("div");warm.className="warm-haze";warm.style.opacity=cataract?(lens==="none"?.48:.2):0;el.appendChild(warm);
+let veil=document.createElement("div");veil.className="veil";veil.style.opacity=cataract?(lens==="none"?.43:.15):0;el.appendChild(veil);
+let halo=document.createElement("div");halo.className="halos";halo.style.opacity=lens==="multi"?.65:cataract?.2:0;el.appendChild(halo);
 let label=document.createElement("div");label.className="overlay-label";label.textContent=names[condition];let info=document.createElement("span");info.className="info";info.textContent="i";info.title="Illustrative effect only — not a medical prediction";label.appendChild(info);el.appendChild(label);
 if(compareLabel){let badge=document.createElement("div");badge.className="half-label";badge.textContent=compareLabel;el.appendChild(badge)}
 return el}
