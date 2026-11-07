@@ -6,87 +6,126 @@
 .viewer{position:relative;height:min(68vh,750px);min-height:400px;border-radius:7px;overflow:hidden;background:#282f37}.single-view,.comparison{position:absolute;inset:0}.comparison{display:none;grid-template-columns:1fr 1fr;gap:3px;background:#101820}.viewer.comparing .single-view{display:none}.viewer.comparing .comparison{display:grid}.visual{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate;background:#202e38}.photo{position:absolute;inset:0;background-size:cover;background-position:center center;transform:scale(1.015);transition:filter .3s,background-image .3s}.warm-haze{position:absolute;inset:0;background:#ba8c4a;mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity .25s}.veil{position:absolute;inset:0;background:linear-gradient(#fff7de75,#ebc68d44);pointer-events:none;opacity:0;transition:opacity .25s}.halos{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 20%,#ffe3a777,transparent 13%),radial-gradient(circle at 46% 18%,#ffeab588,transparent 9%),radial-gradient(circle at 75% 26%,#fff4bb77,transparent 13%);filter:blur(10px);opacity:0}.overlay-label{position:absolute;left:32px;top:22px;z-index:5;font-size:clamp(19px,1.5vw,27px);font-weight:600;text-shadow:0 2px 10px #0006}.info{display:inline-grid;place-items:center;margin-left:12px;border:2px solid white;border-radius:50%;width:23px;height:23px;line-height:1;font-size:14px;font-family:serif;cursor:help;vertical-align:3px}.half-label{position:absolute;bottom:20px;left:22px;z-index:5;background:#111c26cc;padding:9px 13px;border-radius:5px;font-weight:600;font-size:14px}.hidden{display:none!important}
 .reading{position:absolute;inset:0;background:linear-gradient(130deg,#827059,#bd9c7a);display:grid;place-items:center}.paper{background:#fffaf1;color:#2a3638;width:min(76%,700px);height:75%;padding:7% 6%;box-shadow:0 20px 50px #0004;transform:rotate(-2deg)}.paper h2{font:clamp(25px,3vw,50px) Georgia,serif;margin:0 0 25px}.paper p{font:clamp(14px,1.8vw,28px)/1.65 Georgia,serif;color:#37434a}.scene-description{font-size:11px;color:#9ba8b1;padding:15px 5px}.mobile-note{display:none}
 @media(max-width:1000px){.controls{gap:15px;grid-template-columns:repeat(3,minmax(0,1fr));padding-bottom:25px}.toggle-cell{grid-column:1}.control label{font-size:17px}select{font-size:17px}.viewer{height:58vh}}@media(max-width:650px){.controls{grid-template-columns:1fr 1fr;gap:18px 16px}.control:nth-child(3){grid-column:1}.toggle-cell{grid-column:2;grid-row:2}.control:nth-child(5){grid-column:1/-1}select{font-size:16px}.viewer{height:56vh;min-height:340px}.viewer.comparing .comparison{grid-template-columns:1fr;grid-template-rows:1fr 1fr}.overlay-label{left:17px;top:15px;font-size:18px}.half-label{font-size:11px;bottom:11px;left:11px}.app{padding:0 7px}.paper{width:90%;height:78%}}
-</style></head><body><main class="app">
+.play-pause{position:absolute;z-index:20;left:24px;bottom:20px;background:white;color:#0e615d;border:none;border-radius:40px;padding:14px 24px;font-size:16px;font-weight:750;cursor:pointer;box-shadow:0 3px 18px #0003}.ghosting{position:absolute;inset:0;pointer-events:none;transform:translate(3px,1px)}.video-error{position:absolute;inset:0;background:#10202c;color:#e3edf0;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;font-size:16px}.viewer.comparing .play-pause{bottom:18px;left:50%;transform:translateX(-50%)}@media(max-width:650px){.play-pause{left:12px;bottom:12px;padding:10px 16px;font-size:13px}}</style></head><body><main class="app">
 <div class="controls">
-<div class="control"><label for="scene">Scene</label><div class="select-shell"><select id="scene"><option value="night" selected>Night Driving</option><option value="day">Daytime Driving</option><option value="reading">Reading</option><option value="nature">Outdoors</option></select></div></div>
+<div class="control"><label for="scene">Scene</label><div class="select-shell"><select id="scene">
+<option value="night" selected>Night Driving</option>
+<option value="day">Daytime Driving</option>
+<option value="market">Farmers Market</option>
+<option value="reading">Reading</option>
+<option value="nature">Outdoors</option></select></div></div>
 <div class="control"><label for="condition">Eye Condition</label><div class="select-shell"><select id="condition"><option value="cataracts" selected>Cataracts</option><option value="cataracts_astigmatism">Cataracts + Astigmatism</option><option value="presbyopia">Presbyopia</option><option value="presbyopia_astigmatism">Presbyopia + Astigmatism</option></select></div></div>
 <div class="control"><label for="lens">Lens (IOL)</label><div class="select-shell"><select id="lens"><option value="none" selected>Select Lens</option><option value="mono">Monofocal</option><option value="edof">Extended Depth of Focus</option><option value="multi">Multifocal</option><option value="toric">Toric</option></select></div></div>
 <div class="control toggle-cell"><label for="compare">Compare</label><div class="toggle-shell"><input type="checkbox" id="compare" class="switch" aria-label="Compare lens profiles"></div></div>
 <div class="control"><label for="other">Comparison Lens (IOL)</label><div class="select-shell disabled" id="otherShell"><select id="other" disabled><option value="none" selected>Select Lens</option><option value="mono">Monofocal</option><option value="edof">Extended Depth of Focus</option><option value="multi">Multifocal</option><option value="toric">Toric</option></select></div></div>
 </div>
-<section class="viewer" id="viewer"><div class="single-view" id="single"></div><div class="comparison" id="comparison"></div></section>
+<section class="viewer" id="viewer"><div class="single-view" id="single"></div><div class="comparison" id="comparison"></div><button id="playPause" class="play-pause" type="button">&#10074;&#10074;&nbsp; Pause</button></section>
 <div class="scene-description">Illustrative visual simulation only. Not a clinically validated representation of vision, IOL performance, or a prediction of surgical outcomes.</div>
 </main>
 <script>
-const scenes={night:{url:"https://images.pexels.com/photos/4839255/pexels-photo-4839255.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Night Driving"},day:{url:"https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Daytime Driving"},nature:{url:"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Outdoors"}};
+const scenes={
+ night:{title:"Night Driving",video:"https://assets.mixkit.co/videos/preview/mixkit-driving-down-an-avenue-at-night-42032-large.mp4",rate:0.36},
+ day:{title:"Daytime Driving",video:"https://assets.mixkit.co/videos/preview/mixkit-dashboard-of-a-car-34448-large.mp4",rate:0.75},
+ market:{title:"Farmers Market",video:"https://assets.mixkit.co/videos/preview/mixkit-outdoor-marketplace-in-slow-motion-981-large.mp4",rate:1},
+ reading:{title:"Reading",video:"https://assets.mixkit.co/videos/preview/mixkit-a-person-reading-a-book-close-up-1724-large.mp4",rate:1},
+ nature:{title:"Outdoors",video:"https://assets.mixkit.co/videos/preview/mixkit-woman-walks-through-a-garden-971-large.mp4",rate:1}
+};
 const $=id=>document.getElementById(id);let videoOffset=0;const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
-function renderVisual(lens,compareLabel){let scene=$("scene").value,condition=$("condition").value;let el=document.createElement("div");el.className="visual";let photo=document.createElement("div");photo.className="photo";if(scene==="reading"){photo.innerHTML='<div class="reading"><div class="paper"><h2>A clearer view</h2><p>Our eyes help us explore the world around us. Different distances require different amounts of focus.</p><p>Vision may change over time.</p></div></div>'}else{
-if(scene!=="night")photo.style.backgroundImage="url('"+scenes[scene].url+"')";else photo.style.background="#101820";
-if(scene==="night"){
-  const video=document.createElement("video");
-  video.className="driving-video";
-  video.src="https://videos.pexels.com/video-files/3554322/3554322-hd_1920_1080_25fps.mp4";
-  video.autoplay=true;video.loop=true;video.muted=true;video.playsInline=true;
-  video.defaultPlaybackRate=0.85;video.playbackRate=0.85;
-  video.preload="auto";
-  video.style.cssText="width:100%;height:100%;object-fit:cover;display:block;";
-  video.setAttribute("aria-label","Night driving point of view");
-  video.addEventListener("error",()=>{
-    // Try alternate encodes from the same real-time POV footage before showing fallback.
-    const formats=[
-      "https://videos.pexels.com/video-files/3554322/3554322-hd_1920_1080_30fps.mp4",
-      "https://videos.pexels.com/video-files/3554322/3554322-hd_1920_1080_24fps.mp4",
-      "https://videos.pexels.com/video-files/3554322/3554322-hd_1280_720_25fps.mp4"
-    ];
-    const index=Number(video.dataset.fallbackIndex||0);
-    if(index<formats.length){
-      video.dataset.fallbackIndex=String(index+1);
-      video.src=formats[index];video.load();video.play().catch(()=>{});
-    }else{
-      video.remove();
-      const note=document.createElement("div");
-      note.textContent="Night-driving video could not load. The old Fiat photo has been removed.";
-      note.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#dce8ec;background:#101820;padding:28px;font-size:15px";
-      photo.appendChild(note);
-    }
-  });
-  video.addEventListener("loadedmetadata",()=>{
-    if(videoOffset&&video.duration)video.currentTime=videoOffset%video.duration;
-    video.playbackRate=0.85;
-    video.play().catch(()=>{});
-  },{once:true});
-  photo.appendChild(video);
-}}
-
-// The effects combine the selected condition's visual components.
-// These are explanatory illustrations; they do not model real patient outcomes.
-const cataract=condition==="cataracts"||condition==="cataracts_astigmatism";
-const astigmatism=condition==="cataracts_astigmatism"||condition==="presbyopia_astigmatism";
-const presbyopia=condition==="presbyopia"||condition==="presbyopia_astigmatism";
-const near=scene==="reading";
-let blur=(cataract?2.7:0)+(astigmatism?1.4:0)+(presbyopia&&near?3.7:0);
-let contrast=cataract?.68:1;
-let saturation=cataract?.8:1;
-if(lens==="mono"){blur*=near?.8:.45;contrast=Math.min(1,contrast+.12)}
-if(lens==="edof"){blur*=near?.48:.33;contrast=Math.min(1,contrast+.17)}
-if(lens==="multi"){blur*=.36;contrast=Math.min(1,contrast+.13)}
-if(lens==="toric"&&astigmatism){blur=Math.max(.15,blur-1.35);contrast=Math.min(1,contrast+.06)}
-photo.style.filter="blur("+blur+"px) contrast("+contrast+") saturate("+saturation+")";el.appendChild(photo);
-if(astigmatism){ // subtle offset image mimics directional ghosting
-  const ghost=photo.cloneNode(true);if(ghost.querySelector("video")){ghost.querySelector("video").remove();ghost.style.background="#101820";}
-  ghost.style.opacity=lens==="toric"?.04:.16;
-  ghost.style.transform="translate(6px,2px) scale(1.012)";
-  ghost.style.filter="blur("+Math.max(blur-0.2,0)+"px) contrast("+contrast+")";
-  ghost.setAttribute("aria-hidden","true");
+function renderVisual(lens,compareLabel){
+ const scene=$("scene").value,condition=$("condition").value;
+ const cataract=condition==="cataracts"||condition==="cataracts_astigmatism";
+ const astigmatism=condition==="cataracts_astigmatism"||condition==="presbyopia_astigmatism";
+ const presbyopia=condition==="presbyopia"||condition==="presbyopia_astigmatism";
+ const near=scene==="reading"||scene==="market";
+ let blur=(cataract?2.7:0)+(astigmatism?1.3:0)+(presbyopia&&near?3.1:0);
+ let contrast=cataract?.7:1;
+ let saturation=cataract?.82:1;
+ if(lens==="mono"){blur*=near?.75:.43;contrast=Math.min(1,contrast+.13)}
+ if(lens==="edof"){blur*=near?.52:.3;contrast=Math.min(1,contrast+.18)}
+ if(lens==="multi"){blur*=.35;contrast=Math.min(1,contrast+.14)}
+ if(lens==="toric"&&astigmatism){blur=Math.max(.1,blur-1.3);contrast=Math.min(1,contrast+.06)}
+ const el=document.createElement("div");el.className="visual";
+ const photo=document.createElement("div");photo.className="photo";
+ photo.style.background="#14222b";
+ photo.style.filter="blur("+blur+"px) contrast("+contrast+") saturate("+saturation+")";
+ const video=document.createElement("video");
+ video.className="scene-video";video.muted=true;video.autoplay=true;video.loop=true;
+ video.playsInline=true;video.preload="metadata";
+ video.src=scenes[scene].video;
+ video.playbackRate=scenes[scene].rate;
+ video.style.cssText="width:100%;height:100%;object-fit:cover;display:block";
+ video.addEventListener("loadedmetadata",()=>{
+  if(Number.isFinite(video.duration)&&video.duration>0&&currentVideoTime>0){try{video.currentTime=currentVideoTime%video.duration}catch(e){}}
+  video.playbackRate=scenes[scene].rate;
+  if(isPlaying)video.play().catch(()=>{});else video.pause();
+ },{once:true});
+ video.addEventListener("error",()=>{
+  const msg=document.createElement("div");
+  msg.className="video-error";
+  msg.textContent="This scene's footage could not load. Please try another scene.";
+  photo.appendChild(msg);video.remove();
+ },{once:true});
+ photo.appendChild(video);el.appendChild(photo);
+ if(astigmatism){
+  const ghost=document.createElement("div");ghost.className="ghosting";
+  ghost.style.opacity=lens==="toric"?.05:.19;
+  // A subtle sharp edge offset indicates astigmatism without duplicating video streams.
+  ghost.style.boxShadow="inset 6px 1px 16px 5px rgba(237,244,244,.18)";
   el.appendChild(ghost);
+ }
+ if(cataract){
+  const haze=document.createElement("div");haze.className="warm-haze";
+  haze.style.opacity=lens==="none"?.37:.15;el.appendChild(haze);
+  const veil=document.createElement("div");veil.className="veil";
+  veil.style.opacity=lens==="none"?.34:.12;el.appendChild(veil);
+ }
+ if(lens==="multi"||cataract){
+  const halos=document.createElement("div");halos.className="halos";
+  halos.style.opacity=lens==="multi"?.6:.12;el.appendChild(halos);
+ }
+ const label=document.createElement("div");label.className="overlay-label";
+ label.textContent=names[condition];
+ const info=document.createElement("span");info.className="info";info.textContent="i";
+ info.title="Illustrative effects, not a clinically validated prediction.";
+ label.appendChild(info);el.appendChild(label);
+ if(compareLabel){const badge=document.createElement("div");badge.className="half-label";badge.textContent=compareLabel;el.appendChild(badge)}
+ return el;
 }
-let warm=document.createElement("div");warm.className="warm-haze";warm.style.opacity=cataract?(lens==="none"?.48:.2):0;el.appendChild(warm);
-let veil=document.createElement("div");veil.className="veil";veil.style.opacity=cataract?(lens==="none"?.43:.15):0;el.appendChild(veil);
-let halo=document.createElement("div");halo.className="halos";halo.style.opacity=lens==="multi"?.65:cataract?.2:0;el.appendChild(halo);
-let label=document.createElement("div");label.className="overlay-label";label.textContent=names[condition];let info=document.createElement("span");info.className="info";info.textContent="i";info.title="Illustrative effect only — not a medical prediction";label.appendChild(info);el.appendChild(label);
-if(compareLabel){let badge=document.createElement("div");badge.className="half-label";badge.textContent=compareLabel;el.appendChild(badge)}
-return el}
-function update(){const previous=document.querySelector(".single-view video");if(previous&&Number.isFinite(previous.currentTime))videoOffset=previous.currentTime;const comp=$("compare").checked;$("viewer").classList.toggle("comparing",comp);$("other").disabled=!comp;$("otherShell").classList.toggle("disabled",!comp);
-$("single").replaceChildren(renderVisual($("lens").value));$("comparison").replaceChildren(renderVisual($("lens").value,"Lens A · "+lenses[$("lens").value]),renderVisual($("other").value,"Lens B · "+lenses[$("other").value]));}
-for(let el of document.querySelectorAll("select,input"))el.addEventListener("change",update);update();document.addEventListener("visibilitychange",()=>{document.querySelectorAll("video.driving-video").forEach(v=>{if(document.hidden)v.pause();else v.play().catch(()=>{})})});
+let currentVideoTime=0,isPlaying=true,lastScene=$("scene").value;
+function playbackSync(){
+ const vids=[...document.querySelectorAll(".viewer video.scene-video")];
+ const main=document.querySelector(".single-view video.scene-video")||vids[0];
+ const master=vids.find(v=>v.closest(".viewer.comparing .comparison"))||main;
+ if(master&&Number.isFinite(master.currentTime))currentVideoTime=master.currentTime;
+ for(const v of vids){
+   if(v!==master&&v.readyState>=1&&Math.abs(v.currentTime-master.currentTime)>.2){
+     try{v.currentTime=master.currentTime}catch(e){}
+   }
+   v.playbackRate=scenes[$("scene").value].rate;
+   if(isPlaying&&v.paused)v.play().catch(()=>{});
+   else if(!isPlaying&&!v.paused)v.pause();
+ }
+ const btn=$("playPause");
+ btn.innerHTML=isPlaying?"&#10074;&#10074;&nbsp; Pause":"&#9654;&nbsp; Play";
+}
+function update(){
+ const previous=document.querySelector(".viewer.comparing .comparison video")||document.querySelector(".single-view video");
+ const selectedScene=$("scene").value;
+ if(lastScene!==selectedScene){currentVideoTime=0;lastScene=selectedScene}
+ else if(previous&&Number.isFinite(previous.currentTime))currentVideoTime=previous.currentTime;
+ const comp=$("compare").checked;
+ $("viewer").classList.toggle("comparing",comp);
+ $("other").disabled=!comp;$("otherShell").classList.toggle("disabled",!comp);
+ $("single").replaceChildren(renderVisual($("lens").value));
+ $("comparison").replaceChildren(renderVisual($("lens").value,"Lens A · "+lenses[$("lens").value]),renderVisual($("other").value,"Lens B · "+lenses[$("other").value]));
+ for(const video of document.querySelectorAll(".viewer video.scene-video"))video.addEventListener("timeupdate",playbackSync);
+ playbackSync();
+}
+for(const el of document.querySelectorAll("select,input"))el.addEventListener("change",update);
+$("playPause").addEventListener("click",()=>{isPlaying=!isPlaying;playbackSync()});
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){document.querySelectorAll("video.scene-video").forEach(v=>v.pause());}
+ else if(isPlaying){document.querySelectorAll("video.scene-video").forEach(v=>v.play().catch(()=>{}));}
+});
+update();
 </script></body></html>
