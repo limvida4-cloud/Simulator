@@ -21,7 +21,7 @@
 const scenes={night:{url:"https://images.pexels.com/photos/4839255/pexels-photo-4839255.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Night Driving"},day:{url:"https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Daytime Driving"},nature:{url:"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Outdoors"}};
 const $=id=>document.getElementById(id);let videoOffset=0;const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
 function renderVisual(lens,compareLabel){let scene=$("scene").value,condition=$("condition").value;let el=document.createElement("div");el.className="visual";let photo=document.createElement("div");photo.className="photo";if(scene==="reading"){photo.innerHTML='<div class="reading"><div class="paper"><h2>A clearer view</h2><p>Our eyes help us explore the world around us. Different distances require different amounts of focus.</p><p>Vision may change over time.</p></div></div>'}else{
-photo.style.backgroundImage="url('"+scenes[scene].url+"')";
+if(scene!=="night")photo.style.backgroundImage="url('"+scenes[scene].url+"')";else photo.style.background="#101820";
 if(scene==="night"){
   const video=document.createElement("video");
   video.className="driving-video";
@@ -45,8 +45,8 @@ if(scene==="night"){
     }else{
       video.remove();
       const note=document.createElement("div");
-      note.textContent="Driving footage unavailable — check the video source.";
-      note.style.cssText="position:absolute;bottom:18px;right:18px;color:#fff;background:#14232cba;padding:8px 11px;border-radius:6px;font-size:12px";
+      note.textContent="Night-driving video could not load. The old Fiat photo has been removed.";
+      note.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#dce8ec;background:#101820;padding:28px;font-size:15px";
       photo.appendChild(note);
     }
   });
@@ -73,7 +73,7 @@ if(lens==="multi"){blur*=.36;contrast=Math.min(1,contrast+.13)}
 if(lens==="toric"&&astigmatism){blur=Math.max(.15,blur-1.35);contrast=Math.min(1,contrast+.06)}
 photo.style.filter="blur("+blur+"px) contrast("+contrast+") saturate("+saturation+")";el.appendChild(photo);
 if(astigmatism){ // subtle offset image mimics directional ghosting
-  const ghost=photo.cloneNode(true);if(ghost.querySelector("video"))ghost.querySelector("video").remove();
+  const ghost=photo.cloneNode(true);if(ghost.querySelector("video")){ghost.querySelector("video").remove();ghost.style.background="#101820";}
   ghost.style.opacity=lens==="toric"?.04:.16;
   ghost.style.transform="translate(6px,2px) scale(1.012)";
   ghost.style.filter="blur("+Math.max(blur-0.2,0)+"px) contrast("+contrast+")";
