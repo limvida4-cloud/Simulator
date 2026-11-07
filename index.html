@@ -19,8 +19,25 @@
 </main>
 <script>
 const scenes={night:{url:"https://images.pexels.com/photos/4839255/pexels-photo-4839255.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Night Driving"},day:{url:"https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Daytime Driving"},nature:{url:"https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1800",title:"Outdoors"}};
-const $=id=>document.getElementById(id);const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
-function renderVisual(lens,compareLabel){let scene=$("scene").value,condition=$("condition").value;let el=document.createElement("div");el.className="visual";let photo=document.createElement("div");photo.className="photo";if(scene==="reading"){photo.innerHTML='<div class="reading"><div class="paper"><h2>A clearer view</h2><p>Our eyes help us explore the world around us. Different distances require different amounts of focus.</p><p>Vision may change over time.</p></div></div>'}else{photo.style.backgroundImage="url('"+scenes[scene].url+"')"}
+const $=id=>document.getElementById(id);let videoOffset=0;const names={cataracts:"Cataracts",cataracts_astigmatism:"Cataracts + Astigmatism",presbyopia:"Presbyopia",presbyopia_astigmatism:"Presbyopia + Astigmatism"};const lenses={none:"No lens selected",mono:"Monofocal",edof:"Extended Depth of Focus",multi:"Multifocal",toric:"Toric"};
+function renderVisual(lens,compareLabel){let scene=$("scene").value,condition=$("condition").value;let el=document.createElement("div");el.className="visual";let photo=document.createElement("div");photo.className="photo";if(scene==="reading"){photo.innerHTML='<div class="reading"><div class="paper"><h2>A clearer view</h2><p>Our eyes help us explore the world around us. Different distances require different amounts of focus.</p><p>Vision may change over time.</p></div></div>'}else{
+photo.style.backgroundImage="url('"+scenes[scene].url+"')";
+if(scene==="night"){
+  const video=document.createElement("video");
+  video.className="driving-video";
+  video.src="https://assets.mixkit.co/videos/preview/mixkit-driving-down-an-avenue-at-night-42032-large.mp4";
+  video.autoplay=true;video.loop=true;video.muted=true;video.playsInline=true;
+  video.preload="auto";
+  video.style.cssText="width:100%;height:100%;object-fit:cover;display:block;";
+  video.setAttribute("aria-label","Night driving point of view");
+  video.addEventListener("error",()=>video.remove(),{once:true});
+  video.addEventListener("loadedmetadata",()=>{
+    if(videoOffset&&video.duration)video.currentTime=videoOffset%video.duration;
+    video.play().catch(()=>{});
+  },{once:true});
+  photo.appendChild(video);
+}}
+
 // The effects combine the selected condition's visual components.
 // These are explanatory illustrations; they do not model real patient outcomes.
 const cataract=condition==="cataracts"||condition==="cataracts_astigmatism";
@@ -36,7 +53,7 @@ if(lens==="multi"){blur*=.36;contrast=Math.min(1,contrast+.13)}
 if(lens==="toric"&&astigmatism){blur=Math.max(.15,blur-1.35);contrast=Math.min(1,contrast+.06)}
 photo.style.filter="blur("+blur+"px) contrast("+contrast+") saturate("+saturation+")";el.appendChild(photo);
 if(astigmatism){ // subtle offset image mimics directional ghosting
-  const ghost=photo.cloneNode(true);
+  const ghost=photo.cloneNode(true);if(ghost.querySelector("video"))ghost.querySelector("video").remove();
   ghost.style.opacity=lens==="toric"?.04:.16;
   ghost.style.transform="translate(6px,2px) scale(1.012)";
   ghost.style.filter="blur("+Math.max(blur-0.2,0)+"px) contrast("+contrast+")";
@@ -49,7 +66,7 @@ let halo=document.createElement("div");halo.className="halos";halo.style.opacity
 let label=document.createElement("div");label.className="overlay-label";label.textContent=names[condition];let info=document.createElement("span");info.className="info";info.textContent="i";info.title="Illustrative effect only — not a medical prediction";label.appendChild(info);el.appendChild(label);
 if(compareLabel){let badge=document.createElement("div");badge.className="half-label";badge.textContent=compareLabel;el.appendChild(badge)}
 return el}
-function update(){const comp=$("compare").checked;$("viewer").classList.toggle("comparing",comp);$("other").disabled=!comp;$("otherShell").classList.toggle("disabled",!comp);
+function update(){const previous=document.querySelector(".single-view video");if(previous&&Number.isFinite(previous.currentTime))videoOffset=previous.currentTime;const comp=$("compare").checked;$("viewer").classList.toggle("comparing",comp);$("other").disabled=!comp;$("otherShell").classList.toggle("disabled",!comp);
 $("single").replaceChildren(renderVisual($("lens").value));$("comparison").replaceChildren(renderVisual($("lens").value,"Lens A · "+lenses[$("lens").value]),renderVisual($("other").value,"Lens B · "+lenses[$("other").value]));}
-for(let el of document.querySelectorAll("select,input"))el.addEventListener("change",update);update();
+for(let el of document.querySelectorAll("select,input"))el.addEventListener("change",update);update();document.addEventListener("visibilitychange",()=>{document.querySelectorAll("video.driving-video").forEach(v=>{if(document.hidden)v.pause();else v.play().catch(()=>{})})});
 </script></body></html>
